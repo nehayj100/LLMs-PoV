@@ -1,0 +1,10 @@
+---
+triple:          'arm64-apple-darwin'
+binary-path:     vulnerable_code
+relocations:
+  - { offsetInCU: 0x26, offset: 0x26, size: 0x8, addend: 0x0, symName: _func_a, symObjAddr: 0x0, symBinAddr: 0x100003DB8, symSize: 0xB8 }
+  - { offsetInCU: 0x4D, offset: 0x4D, size: 0x8, addend: 0x0, symName: _items, symBinAddr: 0x100008000, symSize: 0x0 }
+  - { offsetInCU: 0x68, offset: 0x68, size: 0x8, addend: 0x0, symName: _func_a, symObjAddr: 0x0, symBinAddr: 0x100003DB8, symSize: 0xB8 }
+  - { offsetInCU: 0x9A, offset: 0x9A, size: 0x8, addend: 0x0, symName: _func_b, symObjAddr: 0xB8, symBinAddr: 0x100003E70, symSize: 0x88 }
+  - { offsetInCU: 0xCC, offset: 0xCC, size: 0x8, addend: 0x0, symName: _main, symObjAddr: 0x140, symBinAddr: 0x100003EF8, symSize: 0x30 }
+...

@@ -1,0 +1,3 @@
+1. prompting the LLM to generate a python code to generate  x.bin and x.diff
+2. running the python code to get x.bin and x.diff
+3. using x.bin and x.diff with the C code to get patching done.
