@@ -1,6 +1,9 @@
-# Generate a file x.bin containing the malicious payload
+import struct
+
+# Create a binary file with a long string
 with open("x.bin", "wb") as f:
-    # Write the string "exploited" to the file, followed by a null terminator
-    f.write(b"exploited\0")
-    
-print("Generated x.bin file for demonstration purposes.")
+    # Write a string longer than 10 characters (the size of each item array)
+    s = b"A" * 20 + b"B"
+    f.write(s)
+
+print("Binary file x.bin generated")

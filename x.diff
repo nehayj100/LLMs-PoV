@@ -1,17 +1,19 @@
---- func_b.c+++ func_b.c@@ -1,9 +1,16 @@ void func_b(){
-     char *buff;
-+    int j;
-     printf("done adding items\n");
--    int j;
+--- mock_vp.c
+
++++ mock_vp.c
+
+@@ -26,6 +26,14 @@
+
+     int j;
      printf("display item #: ");
      scanf("%d", &j);
-+    
-+    // Input validation: Ensure that the index j is within the valid range of items array indices (0-2)
++
++    // Add bounds checking
 +    if (j < 0 || j >= 3) {
-+        printf("Error: Invalid item number. Please enter a value between 0 and 2.\n");
++        printf("Error: Invalid item index. Please enter a value between 0 and 2.
++");
 +        return;
 +    }
-+    
++
      buff = &items[j][0];
-     printf("item %d: %s\n", j, buff);
- }
+     printf("item %d: %s", j, buff);
