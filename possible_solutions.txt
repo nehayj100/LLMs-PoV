@@ -738,3 +738,218 @@ Note that this is a simplified example, and in real-world scenarios, the exploit
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------
+(base) Nehas-MacBook-Air-3:HW1 nehajoshi$ python gen_python_code_patch.py 
+Iteration 1
+
+Final Response from Iteration 10:
+Here's a Python script that generates a patch file (`x.diff`) for the given C code, addressing the global-buffer-overflow error by adding bounds checking in `func_b()`.
+
+```python
+#!/usr/bin/env python3
+
+# mock_vp.c is the original C code with the vulnerability
+mock_vp_c = """
+#include <stdio.h>
+#include <string.h>
+#include <unistd.h>
+
+char items[3][10];
+
+void func_a(){
+    char* buff;
+    int i = 0;
+    do{
+        printf("input item:");
+        buff = &items[i][0];
+        i++;
+        fgets(buff, 40, stdin);
+        buff[strcspn(buff, "\\n")] = 0;
+    }while(strlen(buff)!=0);
+    i--;
+}
+
+void func_b(){
+    char *buff;
+    printf("done adding items\n");
+    int j;
+    printf("display item #:");
+    scanf("%d", &j);
+    buff = &items[j][0];
+    printf("item %d: %s\n", j, buff);
+}
+
+#ifndef ___TEST___
+int main(){
+    func_a();
+
+    func_b();
+
+    return 0;
+}
+#endif
+"""
+
+# Define the patch to add bounds checking in func_b()
+patch = """
+--- mock_vp.c
++++ mock_vp_c.patched
+
+@@ -34,6 +34,8 @@
+ void func_b(){
++   int max_items = sizeof(items) / sizeof(items[0]);
+     char *buff;
+     printf("done adding items\n");
+     int j;
+-   scanf("%d", &j);
++   scanf("%d", &j);
++   if (j >= 0 && j < max_items) {
++       buff = &items[j][0];
++       printf("item %d: %s\n", j, buff);
++   } else {
++       printf("Invalid item number. Please try again.\n");
++   }
+ }
+
+#ifndef ___TEST___
+"""
+
+# Write the patch to a file named x.diff in unified diff format
+with open('x.diff', 'w') as f:
+    f.write(patch)
+```
+
+This script generates a patch file (`x.diff`) that modifies the original C code to include bounds checking in `func_b()`. The patch adds input validation to ensure that the index `j` does not exceed the bounds of the `items` array.
+
+To apply this patch, you can use the following command:
+
+```bash
+patch -p0 < x.diff mock_vp.c
+```
+
+This will modify the original C code (`mock_vp.c`) by applying the patch from the file `x.diff`. The resulting patched code should be free of global-buffer-overflow errors.
+
+Note that this script assumes you have a file named `mock_vp.c` containing the original C code with the vulnerability. Make sure to replace `mock_vp.c` with your actual file name if it's different.
+
+Final patch has been saved to 'final_patch.diff'.
+(base) Nehas-MacBook-Air-3:HW1 nehajoshi$ 
+
+
+---------------------------------
+
+
+import difflib
+from subprocess import run, PIPE
+
+# Original C code
+original_code = """
+#include <stdio.h>
+#include <string.h>
+#include <unistd.h>
+
+char items[3][10];
+
+void func_a(){
+    char* buff;
+    int i = 0;
+    do{
+        printf("input item:");
+        buff = &items[i][0];
+        i++;
+        fgets(buff, 40, stdin);
+        buff[strcspn(buff, "\n")] = 0;
+    }while(strlen(buff)!=0);
+    i--;
+}
+
+void func_b(){
+    char *buff;
+    printf("done adding items\n");
+    int j;
+    printf("display item #:");
+    scanf("%d", &j);
+    buff = &items[j][0];
+    printf("item %d: %s\n", j, buff);
+}
+
+#ifndef ___TEST___
+int main()
+{
+
+    func_a();
+
+    func_b();
+
+
+    return 0;
+}
+#endif
+
+"""
+
+# Modified C code with the fix
+modified_code = """
+#include <stdio.h>
+#include <string.h>
+#include <unistd.h>
+
+char items[3][10];
+
+void func_a(){
+    char* buff;
+    int i = 0;
+    do{
+        printf("input item:");
+        buff = &items[i][0];
+        i++;
+        fgets(buff, 40, stdin);
+        buff[strcspn(buff, "\n")] = 0;
+    }while(strlen(buff)!=0);
+    i--;
+}
+
+void func_b(){
+    char *buff;
+    int j;
+    printf("done adding items\n");
+    printf("display item #:");
+    scanf("%d", &j);
+    if (j >= 0 && j < 3) {
+        buff = &items[j][0];
+        printf("item %d: %s\n", j, buff);
+    } else {
+        printf("Invalid item number. Please enter a value between 0 and 2.\n");
+    }
+}
+
+#ifndef ___TEST___
+int main()
+{
+
+    func_a();
+
+    func_b();
+
+
+    return 0;
+}
+#endif
+"""
+
+# Create modified C code with the fix
+with open('modified_mock_vp.c', 'w') as f:
+    f.write(modified_code)
+
+# Generate a diff file between original and modified code
+run(['diff', '-u', 'mock_vp.c', 'modified_mock_vp.c'], stdout=PIPE, stderr=PIPE).stdout
+
+# Create a patch file from the diff output
+with open('patch.diff', 'w') as f:
+    for line in difflib.unified_diff([original_code.encode()], [modified_code.encode()], 'mock_vp.c', 'modified_mock_vp.c'):
+        if line.startswith('+'):
+            f.write(line[1:] + '\n')
+        elif line.startswith('-'):
+            f.write(line[1:] + '\n')
+        else:
+            f.write(line + '\n')
+
+print("Patch generated successfully. Please apply it to the original code.")

@@ -1,19 +1,31 @@
 --- mock_vp.c
-
-+++ mock_vp.c
-
-@@ -26,6 +26,14 @@
-
++++ /mock_vp.c
+@@ -16,13 +16,18 @@
+     }while(strlen(buff)!=0);
+     i--;
+ }
+-
++}
++    if (j >= 0 && j < 3) {
+ void func_b(){
+     char *buff;
+     printf("done adding items\n");
      int j;
-     printf("display item #: ");
+     printf("display item #:");
      scanf("%d", &j);
-+
-+    // Add bounds checking
-+    if (j < 0 || j >= 3) {
-+        printf("Error: Invalid item index. Please enter a value between 0 and 2.
-+");
-+        return;
-+    }
-+
++        } else {
++            printf("Invalid item number\n");
++            return;
++        }
      buff = &items[j][0];
-     printf("item %d: %s", j, buff);
+     printf("item %d: %s\n", j, buff);
+ }
+@@ -32,7 +37,7 @@
+ {
+ 
+     func_a();
+-
++    if (j >= 0 && j < 3) {
+     func_b();
+ 
+ 

@@ -8,3 +8,6 @@
 8. patch files getting generated without headers
 
 9. illegal !
+10. for diff:
+unrecognized inpout
+11. header issues
