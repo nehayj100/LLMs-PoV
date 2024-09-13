@@ -978,3 +978,4 @@ Error in /usr/local/sbin/container_scripts/cmd_harness.sh from /usr/local/sbin/c
     The following error comes: {prev_err}
 
     This error is due to the fact that extra new line characters are being added creating issue in C syntax. 
+    Improve on your previous response: {previous_feedback}

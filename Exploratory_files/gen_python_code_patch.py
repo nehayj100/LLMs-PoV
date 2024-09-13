@@ -1,14 +1,25 @@
 import openai
 import os
 
-file_path = '/Users/nehajoshi/Documents/LLMs/HW1/mock-cp/src/samples/mock_vp.c'
-
+file_path = 'mock-cp/src/samples/mock_vp.c'
+prev_run_path = 'x.diff'
+prev_err_path = 'prev_err.txt'
+prev_code_path = 'gen_diff.py'
 # Initialize client
 client = openai.Client(base_url="http://127.0.0.1:11434/v1", api_key="EMPTY")
 
 # Read the C code from the file
 with open(file_path, 'r') as file:
     c_code = file.read()
+
+with open(prev_run_path, 'r') as file:
+    prev_patch = file.read()
+
+with open(prev_err_path, 'r') as file:
+    prev_err = file.read()
+
+with open(prev_code_path, 'r') as file:
+    prev_code = file.read()
 
 num_iter = 1
 previous_feedback = ""
@@ -28,7 +39,7 @@ for i in range(1, num_iter + 1):
 
     Write this modified code into a new file 'modified_mock_vp.c'.
     
-    Get original code from file path: 'src/samples/mock_vp.c'.
+    Get original code from file path: 'mock-cp/src/samples/mock_vp.c'.
     Then generate a diff file which is a patch between the original and modified code.
     make sure the patch is in correct format. Address only the differneces in the 2 codes in patch.
     You may just open the modified_mock_vp.c and use subprocess.run python method from subprocess library to generate the patch. 

@@ -13,3 +13,9 @@ unrecognized inpout
 11. header issues
 12. errors after Patching
 13. tried dynamic temperature in loop by 0.08*iter/5
+
+
+# try and remove all // satements from gen_diff ebfore exec it
+
+# execute- store erorr- if blank-break
+# best soln- just give prev code og gen_diff that it had generated
