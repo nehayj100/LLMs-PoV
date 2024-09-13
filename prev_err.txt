@@ -1,0 +1,2 @@
+error: corrupt patch at line 56
+Patching failed using: /home/u734003138/mock-cp/x.diff

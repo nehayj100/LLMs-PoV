@@ -1,32 +1,52 @@
 import subprocess
 
-# Original and modified file paths
-original_file = 'mock-cp/src/samples/mock_vp.c'
-modified_file = 'mock-cp/src/samples/mock_vp_modified.c'
+# Original C code file path
+original_code_path = 'mock-cp/src/samples/mock_vp.c'
 
-# Function to generate modified C code
-def modify_code(original_file):
-    with open(original_file, 'r') as f:
-        lines = f.readlines()
+# Modified C code content
+modified_c_code = '''
+#include <stdio.h>
+#include <string.h>
 
-    # Add validation for index j in func_b()
-    modified_lines = []
-    for i, line in enumerate(lines):
-        if "func_b()" in line and not any("if" in modified_lines[-1] for modified_lines[-1] in modified_lines):
-            modified_lines.append('    if (j >= 0 && j < 3) {\n')
-        elif "buff = &items[j][0];" in line:
-            modified_lines.append('        } else {\n')
-            modified_lines.append('            printf("Invalid item number\\n");\n')
-            modified_lines.append('            return;\n')
-            modified_lines.append('        }\n')
-        modified_lines.append(line)
+char items[3][10];
 
-    with open(modified_file, 'w') as f:
-        f.writelines(modified_lines)
+void func_a(){
+    char* buff;
+    int i = 0;
+    do{
+        printf("input item:");
+        buff = &items[i][0];
+        i++;
+        scanf("%s", buff);
+    } while (i < 3);
+}
 
+void func_b(){
+    char *buff;
+    printf("done adding items\n");
+    int j;
+    printf("display item #:");
+    scanf("%d", &j);
+    if (j >= 0 && j < 3) {
+        buff = &items[j][0];
+        printf("item %d: %s\n", j, buff);
+    } else {
+        printf("Invalid item number. Please enter a value between 0 and 2.\n");
+    }
+}
 
-# Generate modified C code
-modify_code(original_file)
+#ifndef ___TEST___
+int main() {
+    func_a();
+    func_b();
+    return 0;
+}
+#endif
+'''
 
-# Create a diff file (patch) between the original and modified code
-subprocess.run(['diff', '-u', original_file, modified_file], stdout=open('x.diff', 'w'))
+# Create modified C code file
+with open('modified_mock_vp.c', 'w') as f:
+    f.write(modified_c_code)
+
+# Generate diff (patch) between original and modified code
+subprocess.run(['diff', '-u', original_code_path, 'modified_mock_vp.c'], stdout=open('x.diff', 'w'))

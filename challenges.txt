@@ -11,3 +11,5 @@
 10. for diff:
 unrecognized inpout
 11. header issues
+12. errors after Patching
+13. tried dynamic temperature in loop by 0.08*iter/5
