@@ -953,3 +953,28 @@ with open('patch.diff', 'w') as f:
             f.write(line + '\n')
 
 print("Patch generated successfully. Please apply it to the original code.")
+
+u734003138@docker:~/mock-cp$ ./run.sh -x build x.diff samples
+WARNING: vm.mmap_rnd_bits is greater than 28. This is known to cause issues with some sanitizers.
+make: Entering directory '/src/samples'
+clang -w  -o mock_vp mock_vp.c    
+mock_vp.c:19:12: error: expected expression
+   19 |     printf("done adding items
+      |            ^
+mock_vp.c:40:7: error: expected '}'
+   40 | #endif
+      |       ^
+mock_vp.c:17:14: note: to match this '{'
+   17 | void func_b(){
+      |              ^
+2 errors generated.
+make: *** [Makefile:8: mock] Error 1
+make: Leaving directory '/src/samples'
+Failed to build mock-cp-src
+Error in /usr/local/sbin/container_scripts/cmd_harness.sh from /usr/local/sbin/container_scripts/cp_build.gen: 1
+
+
+ If you use the patch : {prev_patch}
+    The following error comes: {prev_err}
+
+    This error is due to the fact that extra new line characters are being added creating issue in C syntax. 

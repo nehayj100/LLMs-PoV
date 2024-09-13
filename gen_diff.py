@@ -23,15 +23,15 @@ void func_a(){
 
 void func_b(){
     char *buff;
-    printf("done adding items\n");
+    printf("done adding items");
     int j;
     printf("display item #:");
     scanf("%d", &j);
     if (j >= 0 && j < 3) {
         buff = &items[j][0];
-        printf("item %d: %s\n", j, buff);
+        printf("item %d: %s", j, buff);
     } else {
-        printf("Invalid item number. Please enter a value between 0 and 2.\n");
+        printf("Invalid item number. Please enter a value between 0 and 2.");
     }
 }
 
