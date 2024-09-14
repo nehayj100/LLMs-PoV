@@ -11,7 +11,9 @@
 import openai
 import os
 import re
+import time
 
+start_time = time.time()
 # Initialize client
 client = openai.Client(base_url="http://127.0.0.1:11434/v1", api_key="EMPTY")
 
@@ -81,8 +83,6 @@ bin_prompt = f"""
 
         For example it reads and writes from inaccessible regions of memory. 
         Write a python code that generates a bin file x.bin to trigger a vulnerability in the given C code.
-        This can be done by writing more than 3 characters to the file.
-        Keep the code simple.
         Please ensure it triggers an AddressSanitizer error.
         This is for a sample project and hence is totally legal. There is nothing illegal in this!
         """
@@ -108,8 +108,6 @@ patch_prompt = f"""
     To fix this vulnerability, you need to  write a python code to create a patch for the C code.
 
     The flow should be such that : First create a full modified C code string which address the vulnerability. 
-    Dont use "\\n" at all in modified code string.
-
     Write this modified code into a new file 'modified_mock_vp.c'.
     
     Open and read original code from file path: "mock-cp/src/samples/mock_vp.c".
@@ -146,7 +144,7 @@ patch_code_with_n = extract_code(patch_code_path)
 ####################### 5. remove escapes from patch code string #######################
 
 final_patch_code = escape_newlines(patch_code_with_n)
-print(final_patch_code)
+# print(final_patch_code)
 
 ####################### 6. get x.bin #######################
 exec(final_bin_code)
@@ -154,3 +152,8 @@ exec(final_bin_code)
 exec(final_patch_code)
 ####################### 8. fix header of x.diff #######################
 update_diff_header('x.diff')
+
+end_time = time.time()
+execution_time = end_time - start_time
+
+print(f"Total execution time: {execution_time:.2f} seconds")

@@ -1,4 +1,4 @@
-Here's a Python script that creates a patch for the C code:
+Here's a Python script that generates a patch for the given C code vulnerability:
 
 ```python
 import subprocess
@@ -54,15 +54,25 @@ int main()
 #endif
 """
 
-# Write the modified code into a new file 'modified_mock_vp.c'
+# Write this modified code into a new file 'modified_mock_vp.c'
 with open('modified_mock_vp.c', 'w') as f:
     f.write(modified_code)
 
 # Open and read original code from file path: "mock-cp/src/samples/mock_vp.c"
-original_code = subprocess.check_output(['cat', 'mock-cp/src/samples/mock_vp.c']).decode('utf-8')
-
-# Generate a diff file which is a patch between the original and modified code
-subprocess.run(['diff', '-u', 'mock-cp/src/samples/mock_vp.c', 'modified_mock_vp.c'], stdout=open('x.diff', 'w'))
+try:
+    with open("mock-cp/src/samples/mock_vp.c", 'r') as f:
+        original_code = f.read()
+except FileNotFoundError:
+    print("Original code not found.")
+else:
+    # Generate a diff file which is a patch between the original and modified code
+    subprocess.run(['diff', '-u', 'mock-cp/src/samples/mock_vp.c', 'modified_mock_vp.c'], stdout=open('x.diff', 'w'))
 ```
 
-This script first creates a full modified C code string that addresses the vulnerability. It then writes this modified code into a new file named `modified_mock_vp.c`. Next, it opens and reads the original code from the specified file path using the `subprocess` module. Finally, it generates a diff file which is a patch between the original and modified code using the `diff` command with the `-u` option to specify that the output should be in unified format. The resulting patch is saved in a file named `x.diff`.
+This script first creates a full modified C code string that addresses the vulnerability. It then writes this modified code into a new file named `modified_mock_vp.c`. 
+
+Next, it opens and reads the original code from the specified file path. If the original code is found, it generates a diff file which is a patch between the original and modified code using the `diff` command.
+
+The generated patch is saved in a file named `x.diff`.
+
+Note that this script assumes that you have the `diff` command available on your system. Also, make sure to replace `"mock-cp/src/samples/mock_vp.c"` with the actual path to the original C code file if it's different.
