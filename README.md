@@ -78,4 +78,3 @@ Solution: Initially the code written by the LLM was just ingesting NULL characte
 •	Make sure the mock-cp folder is in the same folder as that of pipeline.py since I have added a path to the reference file as mock-cp/src/samples/mock_vp.c
 •	This is done to keep the application dynamic- we can just change this path and get the same patching work on a new code file.
 •	Get the x.bin and x.diff files.
-![image](https://github.com/user-attachments/assets/50583a31-4b4a-48bf-9171-bd5281ef7366)
