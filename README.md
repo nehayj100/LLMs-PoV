@@ -7,13 +7,12 @@ The report is laid out in the following order:
 •	Scope of improvement 
 •	Instructions to run the code
 
-1.	Application architecture
+Application architecture
 
 The application is built upon a vulnerable code provided in mock-cp folder. This code has security vulnerabilities like a function in the code tries to read or write from memory that is private or inaccessible. 
 This is a security threat because consider for example if passwords are stored starting from a memory location next to an accessible memory location. Accessing or reading them would lead to a great threat to the user whose password is read.
 To solve all such issues posed by vulnerable codes, we design a Large Language Model based application which triggers a vulnerability in the code and then creates a patch from the same. Once, patched, the code is no longer vulnerable with respect to the patched vulnerability. 
 Now the following figure shows the architecture of the application and a details description follows:
- 
 
 The following steps are performed to design the architecture:
 •	First a prompt was written in multiple iterations which explains the LLM about the situation and asks to write a code that in turn generates a bin file which will trigger the vulnerability. (prompt 1)
@@ -21,13 +20,15 @@ The following steps are performed to design the architecture:
 •	The code further creates a difference between original and modified file which is the diff file. 
 •	The diff file has extra \n characters which are dynamically removed in the next step. This is not a hard coded step. It will just scan through the code and convert the \n into \\n to avoid any issues in the diff format. Finally the header of the diff file is verified and fixed.
 
-2.	Details of LLM used:
+Details of LLM used:
+
 The current analysis uses Meta’s Llama-3.1 mode which is among the top 3 models today. 
 The prompts are written in a way that the model follows the instructions step wise. Temperature and max_tokens have been modified and tuned.
 
 # Initialize client
 client = openai.Client(base_url="http://127.0.0.1:11434/v1", api_key="EMPTY")
-3.	Time and cost Analysis:
+
+Time and cost Analysis:
 
 TIME:
 •	The total time required to get the x.bin and x.diff file generated is: 61.43 secs
@@ -45,7 +46,7 @@ o	Completion/ response 1 Tokens: 400
 o	Completion/ response 2 Tokens: 493
 o	Total Completion/ response Tokens: 893
 
-4.	Challenges faced and solutions:
+Challenges faced and solutions:
 
 •	Challenge: The most challenging part of the question for me was to generate a valid patch! It took more than 50 iterations to get a working patch. 
 Solution: Good prompt seems to be the only solution to this problem. I realized that the LLM needs to be told the tasks in a sequential manner one after the other. Completeness of the statement seems to be very important. Writing in caps or writing keywords like ‘Important’ don’t seem to work.
@@ -67,13 +68,13 @@ Solution: I faced issues in the pipeline setup as the LLMs have different output
 •	Challenge: Not getting the buffer overflow
 Solution: Initially the code written by the LLM was just ingesting NULL characters in x.bin. Solution was writing clearly in prompt that we need to write characters that lead to overflow.
 
-5.	Future Scope/ challenges remaining:
+Future Scope/ challenges remaining:
 
 •	Tuning of temperature can be done. To make the pipeline consistently, I used temperature =0 but I think this can be modified and tuned.
 •	The prompt can be made shorter. 
 
 
-6.	Instructions to run the code:
+Instructions to run the code:
 •	Run the pipeline.py or pipeline_bonus.py code
 •	Make sure the mock-cp folder is in the same folder as that of pipeline.py since I have added a path to the reference file as mock-cp/src/samples/mock_vp.c
 •	This is done to keep the application dynamic- we can just change this path and get the same patching work on a new code file.
