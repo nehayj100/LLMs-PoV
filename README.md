@@ -1,5 +1,6 @@
+# Auto-Patch
 
-The report is laid out in the following order:
+Read the following:
 •	Application features code architecture
 •	Details of LLM used
 •	Time and cost analysis
